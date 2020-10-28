@@ -2,9 +2,9 @@
 namespace Framework\Database;
 
 use Psr\Container\ContainerInterface;
-use TurboPancake\Utils\StaticInstanciedInterface;
+use Framework\Utils\StaticallyInstancedInterface;
 
-class Sprinkler {
+class Sprinkler implements StaticallyInstancedInterface {
 
     /**
      * @var ContainerInterface

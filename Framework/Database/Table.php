@@ -1,6 +1,7 @@
 <?php
 namespace Framework\Database;
 
+use Pagerfanta\Pagerfanta;
 use Framework\Database\Exceptions\NoRecordException;
 use Framework\Database\Exceptions\QueryBuilderException;
 
@@ -99,13 +100,30 @@ abstract class Table {
     /**
      * Renvoie un tableau d'objet contenant toutes les entrée de la table
      *
-     * @return Query
+     * @return QueryResult
+     * @throws NoRecordException
+     * @throws QueryBuilderException
      */
-    public function findAll(): Query
+    public function findAll(): QueryResult
     {
         $query = $this->makeQuery();
         $query->setThrowOnNotFound(false);
-        return $query;
+        return $query->fetchAll();
+    }
+
+
+    /**
+     * Renvoie un tableau d'objet contenant toutes les entrée de la table paginées
+     *
+     * @param int $itemsPerPages
+     * @param int $currentPage
+     * @return Pagerfanta
+     */
+    public function findPaginated(int $itemsPerPages, int $currentPage = 1): Pagerfanta
+    {
+        $query = $this->makeQuery();
+        $query->setThrowOnNotFound(false);
+        return $query->paginate($itemsPerPages, $currentPage);
     }
 
     /**

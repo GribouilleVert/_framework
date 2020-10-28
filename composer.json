@@ -22,6 +22,9 @@
         ]
     },
     "require": {
+        "php": "^7.3",
+        "ext-pdo": "*",
+        
         "league/route": "^4.5",
         "league/plates": "^3.3",
         "php-di/php-di": "^6.3",
