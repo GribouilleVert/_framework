@@ -1,7 +1,9 @@
 <?php
 
+use Framework\Factories\EngineFactory;
 use Framework\Services\Session\Lithium;
 use Framework\Services\Session\SessionInterface;
+use League\Plates\Engine;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -16,6 +18,7 @@ return [
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         return $pdo;
     },
-    SessionInterface::class => \DI\autowire(Lithium::class)
+    SessionInterface::class => \DI\autowire(Lithium::class),
+    Engine::class => \DI\factory(EngineFactory::class),
 
 ];
