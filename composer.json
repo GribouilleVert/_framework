@@ -1,0 +1,37 @@
+{
+    "name": "_blank/_framework",
+    "description": "Framework php",
+    "type": "framework",
+    "license": "Private",
+    "authors": [
+        {
+            "name": "Vasco Compain",
+            "email": "vasco.gribouille@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/",
+            "Framework\\": "Framework/"
+        },
+        "files": [
+            "config/constants.php",
+            "Framework/functions.php",
+            "App/functions.php"
+        ]
+    },
+    "require": {
+        "league/route": "^4.5",
+        "league/plates": "^3.3",
+        "php-di/php-di": "^6.3",
+        "laminas/laminas-diactoros": "^2.4",
+        "laminas/laminas-httphandlerrunner": "^1.2",
+        "robmorgan/phinx": "^0.12.4",
+        "pagerfanta/pagerfanta": "^2.4"
+    },
+    "require-dev": {
+        "middlewares/whoops": "^2.0",
+        "symfony/var-dumper": "^5.1"
+    }
+}
