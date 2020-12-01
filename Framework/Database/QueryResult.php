@@ -3,6 +3,7 @@ namespace Framework\Database;
 
 use Framework\Database\Exceptions\QueryBuilderException;
 use Framework\Database\Exceptions\ReadOnlyException;
+use stdClass;
 
 class QueryResult implements \ArrayAccess, \Iterator, \Countable {
 
@@ -40,7 +41,7 @@ class QueryResult implements \ArrayAccess, \Iterator, \Countable {
     public function get(int $index): object
     {
         if (is_null($this->entity)) {
-            return $this->records[$index];
+            return Sprinkler::hydrate($this->records[$index], new stdClass);
         }
 
         if (!isset($this->generatedEntities[$index])) {
