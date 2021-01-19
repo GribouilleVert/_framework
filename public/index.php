@@ -23,7 +23,7 @@ $router->setStrategy($strategy);
 
 $router->middlewares(Framework\array_resolve([
     Framework\Middlewares\HttpsMiddleware::class,
-    Framework\Middlewares\TralingSlashMiddleware::class,
+    Framework\Middlewares\TrailingSlashMiddleware::class,
     Framework\Middlewares\MethodDetectorMiddleware::class,
 ], $container));
 
