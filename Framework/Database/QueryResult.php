@@ -10,22 +10,22 @@ class QueryResult implements \ArrayAccess, \Iterator, \Countable {
     /**
      * @var mixed[] Enregistements
      */
-    private $records = [];
+    private array $records = [];
 
     /**
-     * @var string
+     * @var null|string
      */
-    private $entity;
+    private ?string $entity;
 
     /**
      * @var int Index requis pour l'implementation de l'interface \Iterator
      */
-    private $interatorIndex = 0;
+    private int $interatorIndex = 0;
 
     /**
      * @var object[] Cache des objects deja générés par get()
      */
-    private $generatedEntities = [];
+    private array $generatedEntities = [];
 
     public function __construct(array $records, ?string $entity = null)
     {
@@ -36,7 +36,6 @@ class QueryResult implements \ArrayAccess, \Iterator, \Countable {
     /**
      * @param int $index
      * @return mixed
-     * @throws QueryBuilderException
      */
     public function get(int $index): object
     {
@@ -58,7 +57,6 @@ class QueryResult implements \ArrayAccess, \Iterator, \Countable {
      * @link https://php.net/manual/en/iterator.current.php
      * @return mixed Can return any type.
      * @since 5.0.0
-     * @throws QueryBuilderException
      */
     public function current()
     {
@@ -93,7 +91,6 @@ class QueryResult implements \ArrayAccess, \Iterator, \Countable {
      * @return boolean The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      * @since 5.0.0
-     * @throws QueryBuilderException
      */
     public function valid(): bool
     {
@@ -122,7 +119,6 @@ class QueryResult implements \ArrayAccess, \Iterator, \Countable {
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
      * @since 5.0.0
-     * @throws QueryBuilderException
      */
     public function offsetExists($offset): bool
     {
@@ -137,7 +133,6 @@ class QueryResult implements \ArrayAccess, \Iterator, \Countable {
      * </p>
      * @return mixed Can return all value types.
      * @since 5.0.0
-     * @throws QueryBuilderException
      */
     public function offsetGet($offset)
     {

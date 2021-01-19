@@ -10,7 +10,7 @@ class Lithium implements SessionInterface {
     /**
      * @var int
      */
-    private $comportment;
+    private int $comportment;
 
     public function __construct(int $comportment = self::CREATE_SESSION_IF_ABSENT)
     {

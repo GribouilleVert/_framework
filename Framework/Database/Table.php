@@ -10,31 +10,31 @@ abstract class Table {
     /**
      * @var null|\PDO
      */
-    protected $pdo;
+    protected ?\PDO $pdo;
 
     /**
      * Nom de la table en bdd
      * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * Entitée à hydrater
      * @var string
      */
-    protected $entity;
+    protected string $entity;
 
     /**
      * Lancer une erreur en l'absence d'enregistrements
      * @var bool
      */
-    protected $throwOnNotFound = true;
+    protected bool $throwOnNotFound = true;
 
     /**
      * Nom de la collonne primaire de la table
      * @var string
      */
-    protected $customIdColumn = 'id';
+    protected string $customIdColumn = 'id';
 
     /**
      * Table constructor.

@@ -9,7 +9,7 @@ class Sprinkler implements StaticallyInstancedInterface {
     /**
      * @var ContainerInterface
      */
-    private static $container;
+    private static ContainerInterface $container;
 
     public static function hydrate(array $datas, $object): object
     {

@@ -8,12 +8,12 @@ class StaticInstancier {
     /**
      * @var ContainerInterface
      */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * @var string[]
      */
-    private $classList = [];
+    private array $classList = [];
 
     public function __construct(ContainerInterface $container)
     {

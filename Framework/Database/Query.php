@@ -8,70 +8,70 @@ use Framework\Database\Exceptions\QueryBuilderException;
 class Query implements \IteratorAggregate {
 
     /**
-     * @var \PDO
+     * @var null|\PDO
      */
-    private $pdo;
+    private ?\PDO $pdo;
 
     /**
      * @var string
      */
-    private $primaryKeyColumn;
+    private string $primaryKeyColumn;
 
     /**
      * @var string Mot clé SQL (ex: SELECT)
      */
-    private $action = 'SELECT';
+    private string $action = 'SELECT';
 
     /**
      * @var array Nom des tables d'ou proviennent les données
      */
-    private $table;
+    private array $table;
 
     /**
      * @var array Colonne a selectionner lors de la requette
      */
-    private $columns = [];
+    private array $columns = [];
 
     /**
      * @var string
      */
-    private $entity;
+    private string $entity;
 
     /**
      * @var array Liste des conditions
      */
-    private $where = [];
+    private array $where = [];
 
     /**
      * @var array Liste des jointures
      */
-    private $joins = [];
+    private array $joins = [];
 
     /**
      * @var array Colonne sur laquelle GROUP BY doit etre apliqué
      */
-    private $group = [];
+    private array $group = [];
 
     /**
      * @var string Directive ORDER BY
      */
-    private $order;
+    private string $order;
 
     /**
      * @var string Limitation du nombre d'elements a retourner
      */
-    private $limit;
+    private string $limit;
 
     /**
      * @var array Paranmetre de requette préparée PDO
      */
-    private $parameters = [];
+    private array $parameters = [];
 
     /**
      * Lancer une erreur en l'absence d'enregistrements
      * @var bool
      */
-    protected $throwOnNotFound = false;
+    protected bool $throwOnNotFound = false;
 
     public const INNER_JOIN = 0;
     public const CROSS_JOIN = 1;

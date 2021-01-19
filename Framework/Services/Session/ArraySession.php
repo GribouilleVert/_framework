@@ -12,7 +12,7 @@ final class ArraySession implements SessionInterface {
     /**
      * @var array Session Data Saver
      */
-    private $data = [];
+    private array $data = [];
 
     /**
      * Récupère une information de session

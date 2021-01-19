@@ -8,7 +8,7 @@ class PaginatedQuery implements AdapterInterface {
     /**
      * @var string
      */
-    private $query;
+    private string $query;
 
     /**
      * PaginatedQuery constructor.
