@@ -1,8 +1,5 @@
 <?php
 
-use Framework\Database\Sprinkler;
-use Framework\Utils\StaticInstancier;
-
 chdir(dirname(__DIR__));
 
 require_once 'vendor/autoload.php';
@@ -11,9 +8,7 @@ require_once 'vendor/autoload.php';
 |    CONTAINER     |
 \******************/
 $container = (new Framework\Factories\ContainerFactory)();
-
-$staticInstancier = $container->get(StaticInstancier::class);
-$staticInstancier->initClass(Sprinkler::class);
+Framework\Factories\StaticInstancierFactory::init($container);
 //---------------------
 
 $strategy = (new League\Route\Strategy\ApplicationStrategy())->setContainer($container);
