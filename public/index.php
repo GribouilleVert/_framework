@@ -11,13 +11,16 @@ $container = (new Framework\Factories\ContainerFactory)();
 Framework\Factories\StaticInstancierFactory::init($container);
 //---------------------
 
-$strategy = (new League\Route\Strategy\ApplicationStrategy())->setContainer($container);
-$router   = (new League\Route\Router)->setStrategy($strategy);
-
 /*******************\
 |      ROUTING      |
 |   & MIDDLEWARES   |
 \*******************/
+$router = new League\Route\Router;
+
+$strategy = $container->get('app.strategy');
+$strategy->setContainer($container);
+$router->setStrategy($strategy);
+
 $router->middlewares(Framework\array_resolve([
     Framework\Middlewares\HttpsMiddleware::class,
     Framework\Middlewares\TralingSlashMiddleware::class,
