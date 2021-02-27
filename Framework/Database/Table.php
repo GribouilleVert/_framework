@@ -20,9 +20,9 @@ abstract class Table {
 
     /**
      * Entitée à hydrater
-     * @var string
+     * @var null|string
      */
-    protected string $entity;
+    protected ?string $entity = null;
 
     /**
      * Lancer une erreur en l'absence d'enregistrements

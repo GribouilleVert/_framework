@@ -33,9 +33,9 @@ class Query implements \IteratorAggregate {
     private array $columns = [];
 
     /**
-     * @var string
+     * @var null|string
      */
-    private string $entity;
+    private ?string $entity = null;
 
     /**
      * @var array Liste des conditions
