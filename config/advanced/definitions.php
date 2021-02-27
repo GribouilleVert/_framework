@@ -10,7 +10,7 @@ return [
 
     PDO::class => function (ContainerInterface $c) {
         $pdo = new PDO(
-            "{$c->get('database.ty[e')}:host={$c->get('database.host')};port={$c->get('database.port')};dbname={$c->get('database.dbname')};charset=UTF8",
+            "{$c->get('database.type')}:host={$c->get('database.host')};port={$c->get('database.port')};dbname={$c->get('database.dbname')};charset=UTF8",
             $c->get('database.username'),
             $c->get('database.password'),
         );
