@@ -1,5 +1,7 @@
 <?php
 
+use Laminas\Diactoros\Response\HtmlResponse;
+
 chdir(dirname(__DIR__));
 
 require_once 'vendor/autoload.php';
@@ -15,19 +17,19 @@ Framework\Factories\StaticInstancierFactory::init($container);
 |      ROUTING      |
 |   & MIDDLEWARES   |
 \*******************/
-$router = new League\Route\Router;
+$router = $container->get(Framework\Router\Router::class);
 
-$strategy = $container->get('app.strategy');
-$strategy->setContainer($container);
-$router->setStrategy($strategy);
-
-$router->middlewares(Framework\array_resolve([
+$router->addMiddlewares([
+    Middlewares\Whoops::class,
     Framework\Middlewares\HttpsMiddleware::class,
     Framework\Middlewares\TrailingSlashMiddleware::class,
     Framework\Middlewares\MethodDetectorMiddleware::class,
-], $container));
+]);
 
-$router->get('/', [App\Controllers\DefaultController::class, 'index']);
+$router->map('GET', '/', 'index', [App\Controllers\DefaultController::class, 'index']);
+
+# 404
+$router->addPostDispatchMiddleware(App\Middlewares\NotFoundMiddleware::class);
 
 //---------------------
 
@@ -35,7 +37,7 @@ $router->get('/', [App\Controllers\DefaultController::class, 'index']);
 |    EXECUTION     |
 \******************/
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals();
-$response = $router->dispatch($request);
+$response = $router->run($request);
 (new Laminas\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
 
 //---------------------

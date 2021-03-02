@@ -24,14 +24,13 @@
     "require": {
         "php": ">=7.4",
         "ext-pdo": "*",
-        
-        "league/route": "^4.5",
         "league/plates": "^3",
         "php-di/php-di": "^6.3",
         "laminas/laminas-diactoros": "^2",
         "laminas/laminas-httphandlerrunner": "^1",
         "robmorgan/phinx": "^0.12.4",
-        "pagerfanta/pagerfanta": "^2.7"
+        "pagerfanta/pagerfanta": "^2.7",
+        "altorouter/altorouter": "^2.0"
     },
     "require-dev": {
         "middlewares/whoops": "^2",

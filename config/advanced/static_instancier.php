@@ -3,7 +3,9 @@
 return [
 
     'staticallyInstancedClassed' => [
-        //Utils
+        //Insert your classes here
+
+        //_framework Internals
         Framework\Database\Sprinkler::class,
     ],
 
