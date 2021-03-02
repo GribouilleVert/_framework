@@ -8,10 +8,11 @@ use Exception;
 use Framework\Exceptions\SystemException;
 use Framework\Factories\ContainerFactory;
 use Framework\Factories\StaticInstancierFactory;
+use Framework\Middlewares\Internals\FileUploadErrorDetectionMiddleware;
+use Framework\Middlewares\Internals\RequestParametersCustomsMiddleware;
 use Framework\Router\Router;
 use Framework\System\PHPRenderer;
 use Laminas\Diactoros\ServerRequestFactory;
-use League\Plates\Engine;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Container\ContainerInterface;
@@ -26,6 +27,11 @@ use Throwable;
 final class App implements RequestHandlerInterface {
 
     public const VERSION = 'dev';
+
+    private const INTERNAL_MIDDLEWARES = [
+        FileUploadErrorDetectionMiddleware::class,
+        RequestParametersCustomsMiddleware::class,
+    ];
 
     /**
      * Router de l'application
@@ -59,7 +65,7 @@ final class App implements RequestHandlerInterface {
         $this->container->set('_framework.details', $applicationDetails);
 
         $this->index = 0;
-        $this->middlewares = $router->run($request);
+        $this->middlewares = array_merge(self::INTERNAL_MIDDLEWARES, $router->run($request));
 
         try {
             return $this->handle($request);
