@@ -7,17 +7,16 @@ chdir(dirname(__DIR__));
 require_once 'vendor/autoload.php';
 
 /******************\
-|    CONTAINER     |
+|       APP        |
 \******************/
-$container = (new Framework\Factories\ContainerFactory)();
-Framework\Factories\StaticInstancierFactory::init($container);
+$app = new Framework\App;
 //---------------------
 
 /*******************\
 |      ROUTING      |
 |   & MIDDLEWARES   |
 \*******************/
-$router = $container->get(Framework\Router\Router::class);
+$router = $app->getContainer()->get(Framework\Router\Router::class);
 
 $router->addMiddlewares([
     Middlewares\Whoops::class,
@@ -36,8 +35,8 @@ $router->addPostDispatchMiddleware(App\Middlewares\NotFoundMiddleware::class);
 /******************\
 |    EXECUTION     |
 \******************/
-$request = Laminas\Diactoros\ServerRequestFactory::fromGlobals();
-$response = $router->run($request);
+$request = Framework\App::fromGlobals();
+$response = $app->run($request, $router);
 (new Laminas\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
 
 //---------------------

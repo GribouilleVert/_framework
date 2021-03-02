@@ -4,14 +4,11 @@ namespace Framework\Router;
 
 use AltoRouter;
 use Framework\Router\Exceptions\RouterException;
-use Framework\Utils\StaticallyInstancedInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class Router implements RequestHandlerInterface {
+class Router {
 
     /**
      * @var ContainerInterface
@@ -104,7 +101,11 @@ class Router implements RequestHandlerInterface {
         return $route;
     }
 
-    public function run(ServerRequestInterface $request): ResponseInterface
+    /**
+     * @param ServerRequestInterface $request
+     * @return MiddlewareInterface[]|string[]
+     */
+    public function run(ServerRequestInterface $request): array
     {
         $match = $this->internalRouter->match();
         $route = null;
@@ -132,43 +133,7 @@ class Router implements RequestHandlerInterface {
         }
         $this->addMiddlewares($this->postDispatchMiddlewares);
 
-        $this->index = 0;
-        return $this->handle($request);
-    }
-
-    private int $index = 0;
-
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        $middleware = $this->getMiddleware();
-        if (is_null($middleware)) {
-            throw new RouterException('None of the middlewares caught the request.');
-        } elseif ($middleware instanceof MiddlewareInterface) {
-            return $middleware->process($request, $this);
-        }
-    }
-
-    /**
-     * @return MiddlewareInterface|null
-     */
-    private function getMiddleware(): ?object
-    {
-        if (array_key_exists($this->index, $this->middlewares)) {
-            if (is_string($this->middlewares[$this->index])) {
-                try {
-                    $middleware = $this->container->get($this->middlewares[$this->index]);
-                } catch (NotFoundException $exception) {
-                    throw new SystemException('The container can\'t find the middleware: ' . $exception->getMessage());
-                }
-            } elseif ($this->middlewares[$this->index] instanceof MiddlewareInterface) {
-                $middleware = $this->middlewares[$this->index];
-            } else {
-                throw new SystemException('Invalid middleware type, only strings and instances of MiddlewareInterface are accepted.');
-            }
-            $this->index++;
-            return $middleware;
-        }
-        return null;
+        return $this->middlewares;
     }
 
     public function getRoute(string $name): ?object
