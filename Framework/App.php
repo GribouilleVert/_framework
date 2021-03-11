@@ -26,7 +26,7 @@ use Throwable;
  */
 final class App implements RequestHandlerInterface {
 
-    public const VERSION = '1.0';
+    public const VERSION = '1.1';
 
     private const INTERNAL_MIDDLEWARES = [
         FileUploadErrorDetectionMiddleware::class,
