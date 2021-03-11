@@ -6,9 +6,9 @@ use Pagerfanta\Adapter\AdapterInterface;
 class PaginatedQuery implements AdapterInterface {
 
     /**
-     * @var string
+     * @var Query
      */
-    private string $query;
+    private Query $query;
 
     /**
      * PaginatedQuery constructor.

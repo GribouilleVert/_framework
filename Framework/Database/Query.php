@@ -53,9 +53,9 @@ class Query implements \IteratorAggregate {
     private array $group = [];
 
     /**
-     * @var string Directive ORDER BY
+     * @var string[] Directive ORDER BY
      */
-    private string $order;
+    private array $order;
 
     /**
      * @var string Limitation du nombre d'elements a retourner
@@ -261,7 +261,7 @@ class Query implements \IteratorAggregate {
         $clone->columns = ["count($table.`$column`)"];
         $clone->joins = [];
         $clone->group = [];
-        $clone->order = null;
+        $clone->order = [];
         return (int)$clone->execute($this->parameters)->fetchColumn();
     }
 
