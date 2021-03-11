@@ -4,8 +4,10 @@ namespace Framework\Router;
 
 use AltoRouter;
 use Framework\Router\Exceptions\RouterException;
+use Laminas\Diactoros\Uri;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
 class Router {
@@ -36,6 +38,11 @@ class Router {
     {
         $this->container = $container;
         $this->internalRouter = new AltoRouter([], $basePath, $matchTypes);
+    }
+
+    public function addMatchTypes(array $types): void
+    {
+        $this->internalRouter->addMatchTypes($types);
     }
 
     /**
@@ -103,12 +110,14 @@ class Router {
 
     /**
      * @param ServerRequestInterface $request
+     * @param bool $runTimeMiddlewaresOnly
      * @return MiddlewareInterface[]|string[]
      */
-    public function run(ServerRequestInterface $request): array
+    public function run(ServerRequestInterface $request, bool $runTimeMiddlewaresOnly = false): array
     {
-        $match = $this->internalRouter->match();
+        $match = $this->internalRouter->match($request->getUri()->getPath(), $request->getMethod());
         $route = null;
+        $runTimeMiddlewares = [];
         if ($match === false) $route = null;
         elseif (str_contains($match['name'], '/')) {
             $parts = explode('/', $match['name']);
@@ -117,6 +126,11 @@ class Router {
                 $group = $group->getRoute($part);
                 if ($group instanceof Route) {
                     $route = $group;
+                } elseif ($group instanceof RoutesGroup) {
+                    if ($runTimeMiddlewaresOnly)
+                        $runTimeMiddlewares = array_merge($runTimeMiddlewares, $group->middlewares);
+                    else
+                        $this->addMiddlewares($group->middlewares);
                 }
             }
         } else {
@@ -124,20 +138,45 @@ class Router {
         }
 
         if ($route instanceof Route) {
-            $this->addMiddlewares($route->middlewares);
-            $this->addMiddleware(new RunMiddleware(
+            $runMiddleware = new RunMiddleware(
                 $this->container,
                 $match['target'],
                 $match['params']
-            ));
+            );
+            if ($runTimeMiddlewaresOnly) {
+                $runTimeMiddlewares = array_merge($runTimeMiddlewares, $route->middlewares, [$runMiddleware]);
+            } else {
+                $this->addMiddlewares($route->middlewares);
+                $this->addMiddleware($runMiddleware);
+            }
         }
-        $this->addMiddlewares($this->postDispatchMiddlewares);
+        if ($runTimeMiddlewaresOnly)
+            $runTimeMiddlewares = array_merge($runTimeMiddlewares, $this->postDispatchMiddlewares);
+        else
+            $this->addMiddlewares($this->postDispatchMiddlewares);
 
-        return $this->middlewares;
+        return $runTimeMiddlewaresOnly ? $runTimeMiddlewares : $this->middlewares;
     }
 
     public function getRoute(string $name): ?object
     {
         return $this->routes[$name] ?? null;
+    }
+
+    public function generateUri(string $name, array $parameters = [], array $query = []): UriInterface
+    {
+        $uri = new Uri($this->internalRouter->generate($name, $parameters));
+        if (!empty($query)) {
+            $uri = $uri->withQuery(http_build_query($query));
+        }
+        return $uri;
+    }
+
+    /**
+     * @return MiddlewareInterface[]
+     */
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
     }
 }

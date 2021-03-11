@@ -51,9 +51,8 @@ final class App implements RequestHandlerInterface {
     /**
      * Lance le traitement global - ENTRY POINT
      * @param ServerRequestInterface $request
+     * @param Router $router
      * @return ResponseInterface
-     * @throws NotFoundException
-     * @throws \DI\DependencyException
      */
     public function run(ServerRequestInterface $request, Router $router): ResponseInterface
     {
@@ -65,7 +64,9 @@ final class App implements RequestHandlerInterface {
         $this->container->set('_framework.details', $applicationDetails);
 
         $this->index = 0;
-        $this->middlewares = array_merge(self::INTERNAL_MIDDLEWARES, $router->run($request));
+        $this->hasHandledGenericMiddlewares = false;
+        $this->middlewares = array_merge(self::INTERNAL_MIDDLEWARES, $router->getMiddlewares());
+        $this->runTimeRoute = $router;
 
         try {
             return $this->handle($request);
@@ -74,14 +75,25 @@ final class App implements RequestHandlerInterface {
         }
     }
 
-    private int $index = 0;
+    private function runRouting(ServerRequestInterface $request): void
+    {
+        $this->hasHandledGenericMiddlewares = true;
+        $this->middlewares = array_merge($this->middlewares, $this->runTimeRoute->run($request, true));
+    }
 
+    private int $index = 0;
+    private bool $hasHandledGenericMiddlewares = false;
     private array $middlewares;
+    private Router $runTimeRoute;
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $middleware = $this->getMiddleware();
         if (is_null($middleware)) {
+            if (!$this->hasHandledGenericMiddlewares) {
+                $this->runRouting($request);
+                return $this->handle($request);
+            }
             throw new SystemException('None of the middlewares caught the request.', SystemException::SEVERITY_MEDIUM);
         } elseif ($middleware instanceof MiddlewareInterface) {
             try {
