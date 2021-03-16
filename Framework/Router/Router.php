@@ -87,7 +87,7 @@ class Router {
      */
     public function map(string $methods, string $path, string $name, $callable): Route
     {
-        if (str_contains($name, '.')) {
+        if (str_contains($name, '/')) {
             throw new RouterException("Routes cannot have `/` in their names");
         }
 
