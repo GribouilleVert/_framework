@@ -4,6 +4,7 @@ namespace Framework\Middlewares;
 use ArrayAccess;
 use Exception;
 use Framework\Middlewares\Exceptions\CsrfException;
+use Framework\Services\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -23,12 +24,11 @@ class CsrfMiddleware implements MiddlewareInterface {
     private $session;
 
     public function __construct(
-        &$session = [],
+        SessionInterface $session,
         int $tokenLimit = 15,
         string $fieldName = '_csrf',
         string $sessionKey = 'csrf'
     ) {
-        $this->isValidSession($session);
         $this->session = &$session;
         $this->session = &$session;
         $this->fieldName = $fieldName;
@@ -108,19 +108,6 @@ class CsrfMiddleware implements MiddlewareInterface {
     private function reject(): ResponseInterface
     {
         throw new CsrfException('Unable to verify user request\'s authenticity.');
-    }
-
-    /**
-     * @param $session array|\ArrayAccess
-     * @throws \TypeError
-     */
-    private function isValidSession($session): void
-    {
-        if (!is_array($session) && !$session instanceof \ArrayAccess) {
-            throw new \TypeError(
-                '$session must be an array or an \ArrayAccess instance, got ' . gettype($session) . ' .'
-            );
-        }
     }
 
     /**
