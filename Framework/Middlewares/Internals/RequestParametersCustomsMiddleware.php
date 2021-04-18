@@ -27,7 +27,8 @@ class RequestParametersCustomsMiddleware implements MiddlewareInterface {
         $allowedGetArray = $this->getGetAllowedArrayKey();
         $newQueryParams = [];
         foreach ($request->getQueryParams() as $key => $value) {
-            if (is_array($value) AND !in_array($key, $allowedGetArray)) {
+            if (is_array($value) AND in_array($key, $allowedGetArray)) {
+                $newQueryParams[$key] = $value;
                 continue;
             }
 
@@ -44,7 +45,8 @@ class RequestParametersCustomsMiddleware implements MiddlewareInterface {
         $allowedPostArray = $this->getPostAllowedArrayKey();
         $newBodyParams = [];
         foreach ($request->getParsedBody() as $key => $value) {
-            if (is_array($value) AND !in_array($key, $allowedPostArray)) {
+            if (is_array($value) AND in_array($key, $allowedGetArray)) {
+                $newQueryParams[$key] = $value;
                 continue;
             }
 
