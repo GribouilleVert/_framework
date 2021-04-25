@@ -3,6 +3,7 @@ namespace Framework\Renderer;
 
 use Framework\Guard\UserInterface;
 use League\Plates\Template\Template;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Class DocTemplate
@@ -20,6 +21,14 @@ use League\Plates\Template\Template;
  * @see ManifestExtension
  * @method string resolve Résous un fichier en asset compilé
  * @method string asset alias de resolve
+ *
+ * @see RouterExtension
+ * @method UriInterface route(string $name, array $parameters = [], array $query = [])
+ * @method string set_method(string $method)
+ *
+ * @see CsrfExtension
+ * @method string csrf()
+ * @method string csrf_token()
  *
  */
 class DocTemplate extends Template {}
