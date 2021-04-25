@@ -25,6 +25,8 @@ use Psr\Http\Message\UriInterface;
  * @see RouterExtension
  * @method UriInterface route(string $name, array $parameters = [], array $query = [])
  * @method string set_method(string $method)
+ * @method bool route_match_path(string $route, array $arguments)
+ * @method bool route_match_path_start(string|UriInterface $uri)
  *
  * @see CsrfExtension
  * @method string csrf()
