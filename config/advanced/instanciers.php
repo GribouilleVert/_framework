@@ -9,4 +9,8 @@ return [
         Framework\Database\Sprinkler::class,
     ],
 
+    'requestInstancedClasses' => [
+        //Insert your classes here
+    ],
+
 ];
