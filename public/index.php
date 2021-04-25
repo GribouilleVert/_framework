@@ -23,6 +23,8 @@ $router->addMiddlewares([
     Framework\Middlewares\HttpsMiddleware::class,
     Framework\Middlewares\TrailingSlashMiddleware::class,
     Framework\Middlewares\MethodDetectorMiddleware::class,
+    Framework\Middlewares\CsrfMiddleware::class,
+    Framework\Middlewares\RequestPopulatorMiddleware::class,
 ]);
 
 $router->map('GET', '/', 'index', [App\Controllers\DefaultController::class, 'index']);
