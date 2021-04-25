@@ -21,79 +21,55 @@ class RequestParametersCustomsMiddleware implements MiddlewareInterface {
         $this->container = $container;
     }
 
+    /**
+     * @throws SystemException
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
 
-        $allowedGetArray = $this->getGetAllowedArrayKey();
-        $newQueryParams = [];
-        foreach ($request->getQueryParams() as $key => $value) {
-            if (is_array($value) AND in_array($key, $allowedGetArray)) {
-                $newQueryParams[$key] = $value;
-                continue;
-            }
+        //Query parameters
+        $allowedPostArray = $this->getAllowedArrayKey('customs.get.allowedArrayKeys', 'Get');
+        $newQueryParams = $this->filterParams($request->getQueryParams(), $allowedPostArray);
 
-            try {
-                $value = strval($value);
-            } catch (Throwable $t) {
-                continue;
-            }
-
-            $newQueryParams[$key] = $value;
-        }
-
-
-        $allowedPostArray = $this->getPostAllowedArrayKey();
-        $newBodyParams = [];
-        foreach ($request->getParsedBody() as $key => $value) {
-            if (is_array($value) AND in_array($key, $allowedGetArray)) {
-                $newQueryParams[$key] = $value;
-                continue;
-            }
-
-            try {
-                $value = strval($value);
-            } catch (Throwable $t) {
-                continue;
-            }
-
-            $newBodyParams[$key] = $value;
-        }
+        //Body parameters
+        $allowedPostArray = $this->getAllowedArrayKey('customs.post.allowedArrayKeys', 'Post');
+        $newBodyParams = $this->filterParams($request->getParsedBody(), $allowedPostArray);
 
         return $handler->handle($request
             ->withQueryParams($newQueryParams)
             ->withParsedBody($newBodyParams));
     }
 
-    private function getGetAllowedArrayKey(): array
+    private function filterParams(array $input, array $safeKeys): array
     {
-        if ($this->container->has('customs.get.allowedArrayKeys')) {
-            $_ = $this->container->get('customs.get.allowedArrayKeys');
-            if (!is_array($_)) {
-                throw new SystemException('Get customs config is invalid: "customs.get.allowedArrayKeys" is not an array.', SystemException::SEVERITY_LOW);
+        $newParams = [];
+        foreach ($input as $key => $value) {
+            if (is_array($value) AND !in_array($key, $safeKeys)) {
+                continue;
             }
 
-            foreach ($_ as $allowedGetKey) {
-                if (!is_string($allowedGetKey)) {
-                    throw new SystemException('Get customs config is invalid: "customs.get.allowedArrayKeys" contains non string values.', SystemException::SEVERITY_LOW);
-                }
+            try {
+                $value = strval($value);
+            } catch (Throwable $t) {
+                continue;
             }
 
-            return $_;
+            $newParams[$key] = $value;
         }
-        return [];
+        return $newParams;
     }
 
-    private function getPostAllowedArrayKey(): array
+    private function getAllowedArrayKey(string $containerKey, string $errorHint): array
     {
-        if ($this->container->has('customs.post.allowedArrayKeys')) {
-            $_ = $this->container->get('customs.post.allowedArrayKeys');
+        if ($this->container->has($containerKey)) {
+            $_ = $this->container->get($containerKey);
             if (!is_array($_)) {
-                throw new SystemException('Post customs config is invalid: "customs.post.allowedArrayKeys" is not an array.', SystemException::SEVERITY_LOW);
+                throw new SystemException($errorHint . ' customs config is invalid: "customs.post.allowedArrayKeys" is not an array.', SystemException::SEVERITY_LOW);
             }
 
             foreach ($_ as $allowedGetKey) {
                 if (!is_string($allowedGetKey)) {
-                    throw new SystemException('Post customs config is invalid: "customs.post.allowedArrayKeys" contains non string values.', SystemException::SEVERITY_LOW);
+                    throw new SystemException($errorHint . ' customs config is invalid: "customs.post.allowedArrayKeys" contains non string values.', SystemException::SEVERITY_LOW);
                 }
             }
 
