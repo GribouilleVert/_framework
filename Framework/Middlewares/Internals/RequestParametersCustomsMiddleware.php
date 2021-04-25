@@ -1,7 +1,7 @@
 <?php
 namespace Framework\Middlewares\Internals;
 
-use Framework\Exceptions\SystemException;
+use Framework\Errors\Exceptions\SystemException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

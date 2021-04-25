@@ -1,5 +1,5 @@
 <?php
-namespace Framework\Exceptions;
+namespace Framework\Errors\Exceptions;
 
 class SystemException extends \Exception {
 

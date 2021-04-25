@@ -5,8 +5,9 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\NotFoundException;
 use Exception;
-use Framework\Exceptions\SystemException;
+use Framework\Errors\Exceptions\SystemException;
 use Framework\Factories\ContainerFactory;
+use Framework\Factories\ErrorMiddlewareFactory;
 use Framework\Factories\StaticInstancierFactory;
 use Framework\Middlewares\Internals\FileUploadErrorDetectionMiddleware;
 use Framework\Middlewares\Internals\RequestParametersCustomsMiddleware;
@@ -28,10 +29,15 @@ final class App implements RequestHandlerInterface {
 
     public const VERSION = '1.1';
 
-    private const INTERNAL_MIDDLEWARES = [
-        FileUploadErrorDetectionMiddleware::class,
-        RequestParametersCustomsMiddleware::class,
-    ];
+    //List of internal middlewares
+    private function getInternalMiddlewares(): array
+    {
+        return [
+            FileUploadErrorDetectionMiddleware::class,
+            RequestParametersCustomsMiddleware::class,
+            ErrorMiddlewareFactory::make($this->getContainer())
+        ];
+    }
 
     /**
      * Router de l'application
@@ -65,7 +71,7 @@ final class App implements RequestHandlerInterface {
 
         $this->index = 0;
         $this->hasHandledGenericMiddlewares = false;
-        $this->middlewares = array_merge(self::INTERNAL_MIDDLEWARES, $router->getMiddlewares());
+        $this->middlewares = array_merge($this->getInternalMiddlewares(), $router->getMiddlewares());
         $this->runTimeRoute = $router;
 
         try {

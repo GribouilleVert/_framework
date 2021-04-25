@@ -19,7 +19,6 @@ $app = new Framework\App;
 $router = $app->getContainer()->get(Framework\Router\Router::class);
 
 $router->addMiddlewares([
-    Middlewares\Whoops::class,
     Framework\Middlewares\HttpsMiddleware::class,
     Framework\Middlewares\TrailingSlashMiddleware::class,
     Framework\Middlewares\MethodDetectorMiddleware::class,

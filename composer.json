@@ -17,6 +17,7 @@
         },
         "files": [
             "config/constants.php",
+            "Framework/Errors/sentry_global.php",
             "Framework/functions.php",
             "App/functions.php"
         ]
@@ -30,7 +31,8 @@
         "laminas/laminas-httphandlerrunner": "^1",
         "robmorgan/phinx": "^0.12.4",
         "pagerfanta/pagerfanta": "^2.7",
-        "altorouter/altorouter": "^2.0"
+        "altorouter/altorouter": "^2.0",
+        "sentry/sdk": "^3.1"
     },
     "require-dev": {
         "middlewares/whoops": "^2",

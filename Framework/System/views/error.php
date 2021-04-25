@@ -1,6 +1,6 @@
 <?php
 
-use Framework\Exceptions\SystemException;
+use Framework\Errors\Exceptions\SystemException;
 
 /**
  * @var SystemException[] $exceptions
