@@ -1,8 +1,8 @@
 <?php
 namespace Framework\Renderer;
 
-use App\Renderer\Exceptions\AssetResolutionException;
-use App\Renderer\Exceptions\NoManifestException;
+use Framework\Renderer\Exceptions\AssetResolutionException;
+use Framework\Renderer\Exceptions\NoManifestException;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 use Psr\Container\ContainerInterface;

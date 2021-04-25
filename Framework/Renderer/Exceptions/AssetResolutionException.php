@@ -1,5 +1,5 @@
 <?php
-namespace App\Renderer\Exceptions;
+namespace Framework\Renderer\Exceptions;
 
 use Exception;
 
