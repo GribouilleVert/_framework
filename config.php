@@ -6,7 +6,7 @@ return [
 
     'config/advanced/definitions.php',
     'config/advanced/renderer.php',
-    'config/advanced/static_instancier.php',
+    'config/advanced/instanciers.php',
     'config/advanced/customs.php',
 
     'config/connections/database.php',
