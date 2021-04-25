@@ -2,7 +2,7 @@
 
 return [
 
-    'staticallyInstancedClassed' => [
+    'staticallyInstancedClasses' => [
         //Insert your classes here
 
         //_framework Internals

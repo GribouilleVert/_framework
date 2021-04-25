@@ -9,7 +9,7 @@ class StaticInstancierFactory {
     public static function init(ContainerInterface $container): void
     {
         $staticInstancier = $container->get(StaticInstancier::class);
-        $classes = $container->get('staticallyInstancedClassed');
+        $classes = $container->get('staticallyInstancedClasses');
         foreach ($classes as $class) {
             $staticInstancier->initClass($class);
         }
